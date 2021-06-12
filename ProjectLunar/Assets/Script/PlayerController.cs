@@ -10,10 +10,13 @@ public class PlayerController : MonoBehaviour
     public float m_MoveSpeed = 1.0f;
     private float m_RotSpeed = 80.0f;
     private Transform m_Transform;
+    private Animator animator;
     // Start is called before the first frame update
     void Start()
     {
         m_Transform = GetComponent<Transform>();
+        animator = m_Transform.Find("GFX").gameObject.GetComponent<Animator>();
+        Debug.Log("Animator : " + animator.ToString());
     }
 
     // Update is called once per frame
@@ -23,9 +26,11 @@ public class PlayerController : MonoBehaviour
         m_Horizontal = Input.GetAxisRaw("Horizontal");
         m_MouseRot = Input.GetAxis("Mouse X");
 
-        Debug.Log("V = " + m_Vertical.ToString());
-        Debug.Log("H = " + m_Horizontal.ToString());
-        Debug.Log("Mouse X = " + m_MouseRot.ToString());
+        animator.SetFloat("MoveSpeed", m_Vertical);
+
+        //Debug.Log("V = " + m_Vertical.ToString());
+        //Debug.Log("H = " + m_Horizontal.ToString());
+        //Debug.Log("Mouse X = " + m_MouseRot.ToString());
 
         Vector3 MoveDir = (Vector3.forward * m_Vertical) + (Vector3.right * m_Horizontal);
 
