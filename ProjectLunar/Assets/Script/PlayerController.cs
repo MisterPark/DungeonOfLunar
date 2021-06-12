@@ -18,7 +18,6 @@ public class PlayerController : MonoBehaviour
         joystick = GameObject.Find("Joystick").GetComponent<JoystickController>();
         m_Transform = GetComponent<Transform>();
         animator = m_Transform.Find("GFX").GetChild(0).gameObject.GetComponent<Animator>();
-        Debug.Log("Animator : " + animator.ToString());
     }
 
     // Update is called once per frame
@@ -41,5 +40,9 @@ public class PlayerController : MonoBehaviour
         m_Transform.Rotate(Vector3.up, angleY *m_RotSpeed);
         m_Transform.Translate(MoveDir *joystick.Speed * m_MoveSpeed * Time.deltaTime, Space.World);
 
+        if(Input.GetMouseButtonDown(0))
+        {
+            animator.SetTrigger("Attack");
+        }
     }
 }
