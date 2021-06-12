@@ -7,15 +7,17 @@ public class PlayerController : MonoBehaviour
     private float m_Vertical = 0.0f;
     private float m_Horizontal = 0.0f;
     private float m_MouseRot = 0.0f;
-    public float m_MoveSpeed = 1.0f;
+    public float m_MoveSpeed = 5.0f;
     private float m_RotSpeed = 80.0f;
     private Transform m_Transform;
     private Animator animator;
+    private JoystickController joystick;
     // Start is called before the first frame update
     void Start()
     {
+        joystick = GameObject.Find("Joystick").GetComponent<JoystickController>();
         m_Transform = GetComponent<Transform>();
-        animator = m_Transform.Find("GFX").gameObject.GetComponent<Transform>().GetChild(0).gameObject.GetComponent<Animator>();
+        animator = m_Transform.Find("GFX").GetChild(0).gameObject.GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -25,22 +27,22 @@ public class PlayerController : MonoBehaviour
         m_Horizontal = Input.GetAxisRaw("Horizontal");
         m_MouseRot = Input.GetAxis("Mouse X");
 
+        m_Vertical = joystick.Speed;
+
         animator.SetFloat("MoveSpeed", m_Vertical);
 
-        //Debug.Log("V = " + m_Vertical.ToString());
-        //Debug.Log("H = " + m_Horizontal.ToString());
-        //Debug.Log("Mouse X = " + m_MouseRot.ToString());
+        Vector3 MoveDir = joystick.Direction.normalized;
 
-        Vector3 MoveDir = (Vector3.forward * m_Vertical) + (Vector3.right * m_Horizontal);
 
-        //m_Transform.Rotate(Vector3.up * m_MouseRot * m_RotSpeed * Time.deltaTime);
-        m_Transform.Translate(Vector3.Normalize(MoveDir) * m_MoveSpeed * Time.deltaTime, Space.Self);
+        float angleY = Vector3.Cross(m_Transform.forward, MoveDir).y;
+        //float angleY = Vector3.Angle(Vector3.forward, MoveDir);
+        Debug.Log("AngleY :" + MoveDir.ToString());
+        m_Transform.Rotate(Vector3.up, angleY *m_RotSpeed);
+        m_Transform.Translate(MoveDir *joystick.Speed * m_MoveSpeed * Time.deltaTime, Space.World);
 
         if(Input.GetMouseButtonDown(0))
         {
             animator.SetTrigger("Attack");
         }
-
-        
     }
 }
