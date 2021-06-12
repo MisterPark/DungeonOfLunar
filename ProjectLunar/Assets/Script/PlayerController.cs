@@ -15,8 +15,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         m_Transform = GetComponent<Transform>();
-        animator = m_Transform.Find("GFX").gameObject.GetComponent<Animator>();
-        Debug.Log("Animator : " + animator.ToString());
+        animator = m_Transform.Find("GFX").gameObject.GetComponent<Transform>().GetChild(0).gameObject.GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -36,6 +35,11 @@ public class PlayerController : MonoBehaviour
 
         //m_Transform.Rotate(Vector3.up * m_MouseRot * m_RotSpeed * Time.deltaTime);
         m_Transform.Translate(Vector3.Normalize(MoveDir) * m_MoveSpeed * Time.deltaTime, Space.Self);
+
+        if(Input.GetMouseButtonDown(0))
+        {
+            animator.SetTrigger("Attack");
+        }
 
         
     }
